@@ -1,5 +1,7 @@
 import React from "react";
 import Sketch from "react-p5";
+import * as d3 from 'd3-voronoi';
+import { polygonContains } from 'd3-polygon';
 
 	export default (props) => {
 
@@ -35,9 +37,6 @@ import Sketch from "react-p5";
 
 		//2D array to hold red, orange, and green points
 		let points = []
-		for (let i = 0; i < 3; i++) {
-			points.push([]);
-		}
 
 
 		let centroids = [];
@@ -52,14 +51,12 @@ import Sketch from "react-p5";
 			p5.stroke('red');
 			p5.strokeWeight(6);
 			p5.point(point.x, point.y);
-
-			points[0].push(p5.createVector(point.x, point.y));
 		}
 
 		const squish_value = 0.5; 
 
 		centroids.forEach(centroid => {
-			console.log("Centroid", centroid);
+			//console.log("Centroid", centroid);
 			centroid.x = centroid.x * squish_value;
 			centroid.y = centroid.y * squish_value;
 
@@ -67,14 +64,14 @@ import Sketch from "react-p5";
 			p5.stroke('orange');
 			p5.point(centroid.x * (p5.width/2) + CENTER, centroid.y * (p5.width/2) + CENTER);
 			
-			points[1].push(p5.createVector(centroid.x * (p5.width/2) + CENTER, centroid.y * (p5.width/2) + CENTER));
+
 			
 			centroid.rotate(p5.QUARTER_PI);
 
 			p5.stroke('green');
 			p5.point(centroid.x * (p5.width/2) + CENTER, centroid.y * (p5.width/2) + CENTER);
-			
-			points[2].push(p5.createVector(centroid.x * (p5.width/2) + CENTER, centroid.y * (p5.width/2) + CENTER));
+			points.push([centroid.x * (p5.width/2) + CENTER, centroid.y * (p5.width/2) + CENTER]);
+
 		});
 
 		return points;
@@ -83,16 +80,13 @@ import Sketch from "react-p5";
 	function createGlyph(p5, points){
 		//WIP
 		p5.stroke("black");
-		
-		generateBezier(p5, points[0]); //orange
-
-
-		
-		//generateBezier(p5, points[1]); //orange
-		//generateBezier(p5, points[2]); //green
+		p5.strokeWeight(6);
+		generateBezier(p5, points);
+		generateSpline(p5, points);
 	}
+	
 
-	//generate a Bezier curve of any order using an array of vectors
+	//generate a Bezier curve of any order using points as array of [x,y] arrays
 	function generateBezier(p5, points) {
 		p5.noFill();
 		p5.beginShape();
@@ -102,8 +96,8 @@ import Sketch from "react-p5";
 			for (let i = 0; i < points.length; i++) {
 				let a = factorial(points.length - 1) / (factorial(i) * factorial(points.length - 1 - i));
 				let b = Math.pow(1 - t, points.length - 1 - i) * Math.pow(t, i);
-				x += a * b * points[i].x;
-				y += a * b * points[i].y;
+				x += a * b * points[i][0];
+				y += a * b * points[i][1];
 				
 		  	}
 		  	p5.vertex(x, y);
@@ -122,13 +116,65 @@ import Sketch from "react-p5";
 		return result;
 	}
 
+	//generate a spline using points as array of [x,y] arrays
+	function generateSpline(p5, points){
+		p5.noFill();
+		p5.strokeWeight(6);
+		console.log(points.length);
+		p5.beginShape();
+		p5.curveVertex(points[0][0], points[0][1]);
+		points.forEach(point => {
+			p5.curveVertex(point[0], point[1]);
+		})
+		p5.curveVertex(points[points.length-1].x, points[points.length-1].y);
+		p5.endShape();
+	}
+
+	//given the centroid as array of [x,y] arrays, return random points for each voronoi cell as an array of [x,y] arrays
+	function generateRandomPoints(p5, centroids) {
+		const voronoi = d3.voronoi().extent([[0, 0], [CANVAS_SIZE, CANVAS_SIZE]]);
+		const polygons = voronoi(centroids).polygons();
+		const randomPoints = [];
+		
+		polygons.forEach((polygon) => {
+		  const bounds = polygon.reduce((bounds, [x, y]) => {
+			return [
+			  Math.min(bounds[0], x),
+			  Math.min(bounds[1], y),
+			  Math.max(bounds[2], x),
+			  Math.max(bounds[3], y),
+			];
+		  }, [Infinity, Infinity, -Infinity, -Infinity]);
+	  
+		  let point;
+		  do {
+			point = [Math.random() * (bounds[2] - bounds[0]) + bounds[0], Math.random() * (bounds[3] - bounds[1]) + bounds[1]];
+			
+		  } while (!polygonContains(polygon, point));
+		  
+		  
+		  randomPoints.push([point[0], point[1]]);
+		  p5.stroke("blue");
+		  p5.strokeWeight(20);
+		  p5.point(point[0], point[1]);
+		});
+		
+
+		return randomPoints;
+	  }
+
+	
+
 	const draw = (p5) => {
 		p5.background(0);
 		// NOTE: Do not use setState in the draw function or in functions that are executed
 		// in the draw function...
 		// please use normal variables or class properties for these purposes
+
+		let centroids = generateGlyphDomain(p5);
 		
-		let points = generateGlyphDomain(p5);
+		let points = generateRandomPoints(p5, centroids);
+	
 		createGlyph(p5, points);
 
 	};
