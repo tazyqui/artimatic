@@ -14,7 +14,24 @@ import { polygonContains } from 'd3-polygon';
 		p5.createCanvas(CANVAS_SIZE, CANVAS_SIZE).parent(canvasParentRef);
 		p5.noLoop();
 	};
+
+	function scaleVectorsToCanvas(p5, points){
+		console.log("svtc", points);
+		let scaled_points = [];
+		points.forEach(point => {
+			scaled_points.push(point.mult(p5.width/2).add(p5.createVector(CENTER, CENTER)).copy());
+		});
+		return scaled_points;
+	}
 	
+	function arrayVectorToPair(vectors){
+		let pairs = [];
+		vectors.forEach(vector => {
+			pairs.push([vector.x, vector.y]);
+		});
+		return pairs;
+	}
+
 	function generatePointInUnitCircle(p5){
 		let radius = p5.sqrt(p5.random());
 		let theta = p5.random(0, p5.TWO_PI);
@@ -55,39 +72,31 @@ import { polygonContains } from 'd3-polygon';
 
 		const squish_value = 0.5; 
 
-		centroids.forEach(centroid => {
-			//console.log("Centroid", centroid);
-			centroid.x = centroid.x * squish_value;
-			centroid.y = centroid.y * squish_value;
+		// centroids.forEach(centroid => {
+		// 	//console.log("Centroid", centroid);
+		// 	centroid.x = centroid.x * squish_value;
+		// 	centroid.y = centroid.y * squish_value;
 
-			p5.strokeWeight(6);
-			p5.stroke('orange');
-			p5.point(centroid.x * (p5.width/2) + CENTER, centroid.y * (p5.width/2) + CENTER);
+		// 	p5.strokeWeight(6);
+		// 	p5.stroke('orange');
+		// 	p5.point(centroid.x * (p5.width/2) + CENTER, centroid.y * (p5.width/2) + CENTER);
 			
 
 			
-			centroid.rotate(p5.QUARTER_PI);
+		// 	centroid.rotate(p5.QUARTER_PI);
 
-			p5.stroke('green');
-			p5.point(centroid.x * (p5.width/2) + CENTER, centroid.y * (p5.width/2) + CENTER);
-			points.push([centroid.x * (p5.width/2) + CENTER, centroid.y * (p5.width/2) + CENTER]);
+		// 	p5.stroke('green');
+		// 	p5.point(centroid.x * (p5.width/2) + CENTER, centroid.y * (p5.width/2) + CENTER);
+		// 	//points.push([centroid.x * (p5.width/2) + CENTER, centroid.y * (p5.width/2) + CENTER]);
 
-		});
+		// });
 
-		return points;
+		return centroids;
 	}
-	
-	function createGlyph(p5, points){
-		//WIP
-		p5.stroke("black");
-		p5.strokeWeight(6);
-		generateBezier(p5, points);
-		generateSpline(p5, points);
-	}
-	
 
 	//generate a Bezier curve of any order using points as array of [x,y] arrays
 	function generateBezier(p5, points) {
+		console.log('bezier points', points);
 		p5.noFill();
 		p5.beginShape();
 		for (let t = 0; t <= 1; t += 0.01) {
@@ -161,7 +170,44 @@ import { polygonContains } from 'd3-polygon';
 		
 
 		return randomPoints;
-	  }
+	}
+
+	function indexClosestCentroid(p5, centroids, point){
+		let closestIndex = 0;
+		let closest = centroids[0];
+		for(let i = 0; i < centroids.length; i++){
+			if(centroids[i].dist(point) < closest.dist(point)){
+				closest = centroids[i];
+				closestIndex = i;
+			}
+		}
+		return closestIndex;
+	}
+
+	function generateRandomPointsNaive(p5, centroids){
+		let points = [];
+		let pointInCell = [];
+		centroids.forEach(x => {
+			pointInCell.push(false);
+		});
+		while(points.length !== centroids.length){
+			let point = generatePointInUnitCircle(p5);
+			let index = indexClosestCentroid(p5, centroids, point);
+			if(!pointInCell[index]){
+				pointInCell[index] = true;
+				points.push(point);
+			}
+		}
+		return points;
+	}
+
+	function createGlyph(p5, points){
+		//WIP
+		p5.stroke("black");
+		p5.strokeWeight(6);
+		//generateBezier(p5, points);
+		generateSpline(p5, points);
+	}
 
 	
 
@@ -172,10 +218,12 @@ import { polygonContains } from 'd3-polygon';
 		// please use normal variables or class properties for these purposes
 
 		let centroids = generateGlyphDomain(p5);
+		console.log("centroids", centroids);
+		let points = generateRandomPointsNaive(p5, centroids);
+		console.log("points", points);
 		
-		let points = generateRandomPoints(p5, centroids);
-	
-		createGlyph(p5, points);
+		//let points = generateRandomPoints(p5, centroids);
+		createGlyph(p5, arrayVectorToPair(scaleVectorsToCanvas(p5, points)));
 
 	};
 
