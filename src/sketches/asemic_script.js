@@ -72,24 +72,23 @@ import { polygonContains } from 'd3-polygon';
 
 		const squish_value = 0.5; 
 
-		// centroids.forEach(centroid => {
-		// 	//console.log("Centroid", centroid);
-		// 	centroid.x = centroid.x * squish_value;
-		// 	centroid.y = centroid.y * squish_value;
+		centroids.forEach(centroid => {
+			//console.log("Centroid", centroid);
+			let new_centroid = p5.createVector(centroid.x * squish_value, centroid.y * squish_value);
 
-		// 	p5.strokeWeight(6);
-		// 	p5.stroke('orange');
-		// 	p5.point(centroid.x * (p5.width/2) + CENTER, centroid.y * (p5.width/2) + CENTER);
+			p5.strokeWeight(6);
+			p5.stroke('orange');
+			p5.point(new_centroid.x * (p5.width/2) + CENTER, new_centroid.y * (p5.width/2) + CENTER);
 			
 
 			
-		// 	centroid.rotate(p5.QUARTER_PI);
+			new_centroid.rotate(p5.QUARTER_PI);
 
-		// 	p5.stroke('green');
-		// 	p5.point(centroid.x * (p5.width/2) + CENTER, centroid.y * (p5.width/2) + CENTER);
-		// 	//points.push([centroid.x * (p5.width/2) + CENTER, centroid.y * (p5.width/2) + CENTER]);
+			p5.stroke('green');
+			p5.point(new_centroid.x * (p5.width/2) + CENTER, new_centroid.y * (p5.width/2) + CENTER);
+			//points.push([centroid.x * (p5.width/2) + CENTER, centroid.y * (p5.width/2) + CENTER]);
 
-		// });
+		});
 
 		return centroids;
 	}
