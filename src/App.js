@@ -21,10 +21,6 @@ function App() {
         <Inputs />
       </div>
 
-      <div className = "Outputs">
-        <Outputs />
-      </div>
-
       <div className="Footer">
         <Footer />
       </div>
