@@ -9,19 +9,20 @@ import SideBar from './animation/SideBar';
 function App() {
   return (
     <div className="App">
-
-      <SideBar />
-      <AsemicScript />
+      
+      <div className='Header'>
+        <SideBar />
+      </div>
 
       {/* <div className="Header">
         <Header /> 
-      </div>
+      </div> */}
 
       <div className="Script">
         <AsemicScript />
       </div>
 
-      <div className = "Parameters">
+      {/* <div className = "Parameters">
         <Inputs />
       </div>
 
