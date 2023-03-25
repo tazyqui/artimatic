@@ -1,4 +1,4 @@
-#root {
+/* #root {
   height: 100%;
 }
 .App {
@@ -14,29 +14,31 @@
 .Script {
   grid-column: 1 / 3;
   grid-row: 2;
-  background-color: black;
+  background-color: #2C3333;
   text-align: center;
 }
 
 .Footer {
   grid-column: 1 / 3;
   grid-row: 3;
-  background-color: blue;
+  background-color: #CBE4DE;
   text-align: center;
 }
 
 .Header {
   grid-column: 1 / 4;
   grid-row: 1;
-  background-color: orange;
+  background-color: #CBE4DE;
   text-align: center;
 }
 
 .Parameters {
   grid-column: 2;
   grid-row: 2;
-  background-color: green;
+  background-color: #0E8388;
 
-}
+} */
+
+
 
 

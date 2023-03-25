@@ -4,12 +4,16 @@ import Footer from  './components/Footer';
 import Header from './components/Header';
 import Inputs from './components/Inputs';
 import Outputs from './components/Outputs';
+import SideBar from './animation/SideBar';
 
 function App() {
   return (
     <div className="App">
 
-      <div className="Header">
+      <SideBar />
+      <AsemicScript />
+
+      {/* <div className="Header">
         <Header /> 
       </div>
 
@@ -23,7 +27,7 @@ function App() {
 
       <div className="Footer">
         <Footer />
-      </div>
+      </div> */}
     </div>
   );
 }
