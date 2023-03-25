@@ -211,7 +211,6 @@ import { polygonContains } from 'd3-polygon';
 	
 
 	const draw = (p5) => {
-		p5.background(0);
 		// NOTE: Do not use setState in the draw function or in functions that are executed
 		// in the draw function...
 		// please use normal variables or class properties for these purposes

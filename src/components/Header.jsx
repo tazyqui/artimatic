@@ -5,6 +5,8 @@ const Header = () => {
         <div>
             <p>Artimatic</p>
         </div>
+
+        
     )
 };
 

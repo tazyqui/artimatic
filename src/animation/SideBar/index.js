@@ -7,7 +7,7 @@ import './style.scss';
 export const SideBarContext = React.createContext({})
 
 const SideBar = () => {
-  const [isShowSidebar, setIsShowSidebar] = useState(false);
+  const [isShowSidebar, setIsShowSidebar] = useState(true);
   return (
     <SideBarContext.Provider
       value={{ isShowSidebar, setIsShowSidebar }}

@@ -6,6 +6,7 @@ import Inputs from './components/Inputs';
 import Outputs from './components/Outputs';
 import SideBar from './animation/SideBar';
 
+
 function App() {
   return (
     <div className="App">
