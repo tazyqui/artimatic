@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import TopSection from './TopSection';
 import RightSection from './RightSection';
+
 import './style.scss';
 
 export const SideBarContext = React.createContext({})
@@ -15,7 +16,7 @@ const SideBar = () => {
         <div
           className={`SideBar__container__overlay SideBar__container__overlay--${isShowSidebar ? 'show' : 'hide'}`}
           role="button"
-          onClick={() => setIsShowSidebar(false)}
+          //onClick={() => setIsShowSidebar(false)}
         ></div>
         <TopSection />      
         <RightSection />

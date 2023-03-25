@@ -1,8 +1,10 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useContext } from 'react';
 import Button from '../Button';
+import Inputs from '../../../components/Inputs';
 import { SideBarContext } from '../index';
 import './style.scss';
+
 
 const RightSection = () => {
   const { isShowSidebar, setIsShowSidebar } = useContext(SideBarContext);
@@ -13,6 +15,7 @@ const RightSection = () => {
           onClick={() => setIsShowSidebar(false)}
         />
       </div>
+        <Inputs />
     </div>
   );
 };
