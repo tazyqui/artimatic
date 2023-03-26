@@ -1,7 +1,5 @@
 import React from "react";
 import Sketch from "react-p5";
-import * as d3 from 'd3-voronoi';
-import { polygonContains } from 'd3-polygon';
 
 	export default (props) => {
 
@@ -18,6 +16,16 @@ import { polygonContains } from 'd3-polygon';
 	//----------------
 	//Helper Functions
 	//----------------
+
+	function scaleZeroedVectorsToCanvas(p5, points, width){
+		console.log("szvtc", points);
+
+		let scaled_points = [];
+		points.forEach(point => {
+			scaled_points.push(point.mult(p5.width/width).copy());
+		});
+		return scaled_points;
+	}
 
 	function scaleVectorsToCanvas(p5, points){
 		console.log("svtc", points);
@@ -83,6 +91,16 @@ import { polygonContains } from 'd3-polygon';
 		generateSpline(p5, points);
 	}
 
+	function createGlyphBox(p5, glyphBox){
+		p5.background(255);
+		p5.stroke("black");
+		p5.strokeWeight(3);
+
+		for(let i = 0; i < glyphBox.length; i++){
+			generateSpline(p5, arrayVectorToPair(scaleZeroedVectorsToCanvas(glyphBox[i])));
+		}
+	}
+
 	//----------------
 	//Generate Random Points from Centroids Functions
 	//----------------
@@ -117,6 +135,34 @@ import { polygonContains } from 'd3-polygon';
 	}
 
 	//----------------
+	//GlyphBox Function
+	//----------------
+
+	function placeGlyphsInGlyphBox(p5, pointsArr, horizontalSegments, verticalSegments){
+		let row = [];
+		let col = [];
+		let glyph = [];
+		let horizontalCounter = 0;
+		let verticalCounter = 0;
+
+		for(let i = 0; i < pointsArr.length; i++){
+			for(let j = 0; j < pointsArr[i].length; j++){
+				let point = pointsArr[i][j].copy();
+				point.add(horizontalCounter * 2 + 1, verticalCounter * 2 + 1);
+				col.push(point);
+			}
+			horizontalCounter++;
+			if(horizontalCounter === horizontalSegments){
+				verticalCounter++;
+				horizontalCounter = 0;
+				row.push(col);
+				col = [];
+			}
+		}
+		return row;
+	}
+
+	//----------------
 	//Driver Function
 	//----------------
 
@@ -128,10 +174,23 @@ import { polygonContains } from 'd3-polygon';
 
 		let centroids = generateGlyphDomain(p5);
 		console.log("centroids", centroids);
+
+		let glyphsArr = [];
+		for(let i = 0; i < 100; i++){
+			let points = generateRandomPointsNaive(p5, centroids);
+			glyphsArr.push(points);
+		}
+
 		let points = generateRandomPointsNaive(p5, centroids);
 		console.log("points", points);
+
+		const horizontalSegments = 10; 
+		const verticalSegments = 10;
+		let glyphBox = placeGlyphsInGlyphBox(p5, glyphsArr, horizontalSegments, verticalSegments);
+		console.log("glyphBox", glyphBox);
+		createGlyphBox(p5, glyphBox);
 		
-		createGlyph(p5, arrayVectorToPair(scaleVectorsToCanvas(p5, points)));
+		//createGlyph(p5, arrayVectorToPair(scaleVectorsToCanvas(p5, points)));
 
 	};
 
