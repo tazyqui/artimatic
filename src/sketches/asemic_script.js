@@ -72,7 +72,6 @@ import Sketch from "react-p5";
 	//generate a spline using points as array of [x,y] arrays
 	function generateSpline(p5, points){
 		p5.noFill();
-		p5.strokeWeight(6);
 		console.log(points.length);
 		p5.beginShape();
 		p5.curveVertex(points[0][0], points[0][1]);
@@ -84,21 +83,7 @@ import Sketch from "react-p5";
 	}
 
 	function createGlyph(p5, points){
-		p5.background(255);
-		p5.stroke("black");
-		p5.strokeWeight(6);
-
 		generateSpline(p5, points);
-	}
-
-	function createGlyphBox(p5, glyphBox){
-		p5.background(255);
-		p5.stroke("black");
-		p5.strokeWeight(3);
-
-		for(let i = 0; i < glyphBox.length; i++){
-			generateSpline(p5, arrayVectorToPair(scaleZeroedVectorsToCanvas(glyphBox[i])));
-		}
 	}
 
 	//----------------
@@ -167,7 +152,7 @@ import Sketch from "react-p5";
 	//----------------
 
 	const draw = (p5) => {
-		p5.background(0);
+		p5.background(255);
 		// NOTE: Do not use setState in the draw function or in functions that are executed
 		// in the draw function...
 		// please use normal variables or class properties for these purposes
@@ -175,8 +160,11 @@ import Sketch from "react-p5";
 		let centroids = generateGlyphDomain(p5);
 		console.log("centroids", centroids);
 
+		const horizontalSegments = 20; 
+		const verticalSegments = 20;
+
 		let glyphsArr = [];
-		for(let i = 0; i < 100; i++){
+		for(let i = 0; i < horizontalSegments * verticalSegments; i++){
 			let points = generateRandomPointsNaive(p5, centroids);
 			glyphsArr.push(points);
 		}
@@ -184,13 +172,17 @@ import Sketch from "react-p5";
 		let points = generateRandomPointsNaive(p5, centroids);
 		console.log("points", points);
 
-		const horizontalSegments = 10; 
-		const verticalSegments = 10;
 		let glyphBox = placeGlyphsInGlyphBox(p5, glyphsArr, horizontalSegments, verticalSegments);
 		console.log("glyphBox", glyphBox);
-		createGlyphBox(p5, glyphBox);
 		
-		//createGlyph(p5, arrayVectorToPair(scaleVectorsToCanvas(p5, points)));
+		p5.stroke("black");
+		p5.strokeWeight(1);
+
+		for(let i = 0; i < glyphBox.length; i++){
+			createGlyph(p5, arrayVectorToPair(scaleZeroedVectorsToCanvas(p5, glyphBox[i], horizontalSegments * 2)));
+		}
+		
+		
 
 	};
 
