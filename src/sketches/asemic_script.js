@@ -2,21 +2,29 @@ import React, { useState, useEffect } from "react";
 import Sketch from "react-p5";
 import * as d3 from 'd3-voronoi';
 import { polygonContains } from 'd3-polygon';
-import Download from "../components/Download";
 import P5InstanceContext from '../P5InstanceContext';
 
 	export default (props) => {
 
 		const CANVAS_SIZE = 500;
 		const CENTER = CANVAS_SIZE/2;
-		const [downloaded, setDownloaded] = useState(false);
     	const [p5Instance, setP5Instance] = useState(null);
 
 		useEffect(() => {
 			if (p5Instance) {
-				props.setP5Instance(p5Instance);
+			  props.setP5Instance(p5Instance);
 			}
-		}, [p5Instance]);
+			return () => {
+			  props.setP5Instance(null);
+			};
+		  }, [p5Instance]);
+
+		  useEffect(() => {
+			if (p5Instance) {
+			  p5Instance.redraw();
+			}
+		  }, [p5Instance, props.regenerate]);
+		
 
 	const setup = (p5, canvasParentRef) => {
 		// use parent to render the canvas in this ref
@@ -25,13 +33,6 @@ import P5InstanceContext from '../P5InstanceContext';
 		p5.noLoop();
 	};
 
-	const handleDownload = () => {
-        console.log('Download button clicked');
-        if (p5Instance) {
-            p5Instance.saveCanvas("canvas", "png");
-            setDownloaded(true);
-        }
-    };
 
 	function scaleVectorsToCanvas(p5, points){
 		console.log("svtc", points);
@@ -232,7 +233,7 @@ import P5InstanceContext from '../P5InstanceContext';
 		// NOTE: Do not use setState in the draw function or in functions that are executed
 		// in the draw function...
 		// please use normal variables or class properties for these purposes
-		if (!downloaded) {
+		
 		let centroids = generateGlyphDomain(p5);
 		console.log("centroids", centroids);
 		let points = generateRandomPointsNaive(p5, centroids);
@@ -240,15 +241,18 @@ import P5InstanceContext from '../P5InstanceContext';
 		
 		//let points = generateRandomPoints(p5, centroids);
 		createGlyph(p5, arrayVectorToPair(scaleVectorsToCanvas(p5, points)));
-		}
+		
 		if (!p5Instance) {
 			setP5Instance(p5);
 		  }
 	};
 
 	return (
-        <div>
-            <Sketch setup={setup} draw={draw} />
-        </div>
+        <P5InstanceContext.Provider value={p5Instance}>
+            <div>
+                <Sketch setup={setup} draw={draw} />
+                {/* Other components that may require the p5Instance */}
+            </div>
+        </P5InstanceContext.Provider>
     );
 };

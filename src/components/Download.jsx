@@ -15,7 +15,10 @@ const Download = () => {
   return (
     <center>
     <div className="download">
-      <button className="download-button" onClick={handleDownload}>Download Image</button>
+      <button className="download-button" onClick={handleDownload}>
+      <i className="fas fa-download" style={{ marginRight: '5px' }}></i>
+        Download Image
+        </button>
     </div>
     </center>
   );
