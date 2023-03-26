@@ -7,6 +7,8 @@ import P5InstanceContext from '../P5InstanceContext';
 	export default (props) => {
 
 		const CANVAS_SIZE = 500;
+		const CANVAS_WIDTH = 0.8*window.innerWidth;
+		const CANVAS_HEIGHT = 0.8*window.innerHeight;
 		const CENTER = CANVAS_SIZE/2;
     	const [p5Instance, setP5Instance] = useState(null);
 
@@ -24,15 +26,13 @@ import P5InstanceContext from '../P5InstanceContext';
 			  p5Instance.redraw();
 			}
 		  }, [p5Instance, props.regenerate]);
-		
 
 	const setup = (p5, canvasParentRef) => {
 		// use parent to render the canvas in this ref
 		// (without that p5 will render the canvas outside of your component)
-		p5.createCanvas(CANVAS_SIZE, CANVAS_SIZE).parent(canvasParentRef);
+		p5.createCanvas(CANVAS_WIDTH, CANVAS_HEIGHT).parent(canvasParentRef);
 		p5.noLoop();
 	};
-
 
 	function scaleVectorsToCanvas(p5, points){
 		console.log("svtc", points);
@@ -233,7 +233,7 @@ import P5InstanceContext from '../P5InstanceContext';
 		// NOTE: Do not use setState in the draw function or in functions that are executed
 		// in the draw function...
 		// please use normal variables or class properties for these purposes
-		
+		p5.background(255);
 		let centroids = generateGlyphDomain(p5);
 		console.log("centroids", centroids);
 		let points = generateRandomPointsNaive(p5, centroids);

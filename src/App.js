@@ -7,8 +7,9 @@ import Inputs from './components/Inputs';
 import Outputs from './components/Outputs';
 import SideBar from './animation/SideBar';
 import Download from './components/Download';
-import P5InstanceContext from './P5InstanceContext';
 import Regenerate from "./components/Regenerate";
+import P5InstanceContext from './P5InstanceContext';
+
 
 function App() {
   const [p5Instance, setP5Instance] = useState(null);
