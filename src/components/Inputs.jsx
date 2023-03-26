@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from "react";
 import p5 from "p5";
+import '../App.css';
 
 const Inputs = () => {
   const sliderRef1 = useRef(null);
@@ -113,7 +114,15 @@ const Inputs = () => {
         <h5 className="header-spacing">Input 5</h5>
         <div ref={DropdownRef}></div>
       </div>
+
+      <button className="download-button" style={{marginTop: '25px', width:'90%' }}>
+      <i className="fas fa-save" style={{ marginRight: '5px' }}></i>
+      Update Inputs
+      </button>
+
+
     </div>
+
   );
 };
 
