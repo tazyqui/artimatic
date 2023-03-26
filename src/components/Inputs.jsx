@@ -33,6 +33,7 @@ const Inputs = () => {
         slider3 = p.createSlider(0, 255, 50);
         slider3.parent(sliderRef3.current);
         slider3.style("100%", "80px");
+        p.noLoop();
       };
 
       p.draw = () => {
@@ -48,6 +49,7 @@ const Inputs = () => {
       p.setup = () => {
         checkbox = p.createCheckbox("Checkbox Label", false);
         checkbox.parent(checkboxRef.current);
+        p.noLoop();
       };
 
       p.draw = () => {
@@ -65,6 +67,8 @@ const Inputs = () => {
         select.option("Option 2");
         select.option("Option 3");
         select.parent(DropdownRef.current);
+        p.noLoop();
+
       };
 
       p.draw = () => {
