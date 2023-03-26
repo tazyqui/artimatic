@@ -1,15 +1,34 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Sketch from "react-p5";
+import P5InstanceContext from '../P5InstanceContext';
 
 	export default (props) => {
 
 		const CANVAS_SIZE = 500;
+		const CANVAS_WIDTH = 0.8*window.innerWidth;
+		const CANVAS_HEIGHT = 0.8*window.innerHeight;
 		const CENTER = CANVAS_SIZE/2;
+    	const [p5Instance, setP5Instance] = useState(null);
+
+		useEffect(() => {
+			if (p5Instance) {
+			  props.setP5Instance(p5Instance);
+			}
+			return () => {
+			  props.setP5Instance(null);
+			};
+		  }, [p5Instance]);
+
+		  useEffect(() => {
+			if (p5Instance) {
+			  p5Instance.redraw();
+			}
+		  }, [p5Instance, props.regenerate]);
 
 	const setup = (p5, canvasParentRef) => {
 		// use parent to render the canvas in this ref
 		// (without that p5 will render the canvas outside of your component)
-		p5.createCanvas(CANVAS_SIZE, CANVAS_SIZE).parent(canvasParentRef);
+		p5.createCanvas(CANVAS_WIDTH, CANVAS_HEIGHT).parent(canvasParentRef);
 		p5.noLoop();
 	};
 
@@ -153,10 +172,11 @@ import Sketch from "react-p5";
 
 	const draw = (p5) => {
 		p5.background(255);
+
 		// NOTE: Do not use setState in the draw function or in functions that are executed
 		// in the draw function...
 		// please use normal variables or class properties for these purposes
-
+		p5.background(255);
 		let centroids = generateGlyphDomain(p5);
 		console.log("centroids", centroids);
 
@@ -182,9 +202,18 @@ import Sketch from "react-p5";
 			createGlyph(p5, arrayVectorToPair(scaleZeroedVectorsToCanvas(p5, glyphBox[i], horizontalSegments * 2)));
 		}
 		
-		
+		if (!p5Instance) {
+			setP5Instance(p5);
+		  }
 
 	};
 
-	return <Sketch setup={setup} draw={draw} />;
+	return (
+        <P5InstanceContext.Provider value={p5Instance}>
+            <div>
+                <Sketch setup={setup} draw={draw} />
+                {/* Other components that may require the p5Instance */}
+            </div>
+        </P5InstanceContext.Provider>
+    );
 };

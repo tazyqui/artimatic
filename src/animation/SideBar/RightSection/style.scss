@@ -1,0 +1,32 @@
+$sidebar-width: 15em;
+
+.SideBar__Section {
+  position: fixed;
+  width: $sidebar-width;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  background-color: white;
+  -webkit-box-shadow: 0px 0px 11px -2px rgba(0,0,0,0.75);
+  -moz-box-shadow: 0px 0px 11px -2px rgba(0,0,0,0.75);
+  box-shadow: 0px 0px 11px -2px rgba(0,0,0,0.75);
+  transition:all ease 0.5s;
+  z-index: 3;
+
+  .SideBar__Section__topWrapper {
+    width: 100%;
+    height: 4em;
+    display: flex;
+    flex-direction: row;
+    align-items: center;    
+    border-bottom: 1px solid #0004;
+  }
+}
+
+.SideBar__Section--show {
+  transform: translateX(0);
+}
+
+.SideBar__Section--hide {
+  transform: translateX($sidebar-width);
+}

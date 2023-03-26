@@ -1,38 +1,98 @@
+/* #root {
+  height: 100%;
+}
 .App {
+  z-index: 0;
+  height: 100%;
+  width: 100%;
+  display: grid;
+  grid-template-columns: 5fr 1fr;
+  grid-template-rows: 1fr 12fr 1fr;
+  overflow: hidden;
+}
+
+.Script {
+  grid-column: 1 / 3;
+  grid-row: 2;
+  background-color: #2C3333;
   text-align: center;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.Footer {
+  grid-column: 1 / 3;
+  grid-row: 3;
+  background-color: #CBE4DE;
+  text-align: center;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.Header {
+  grid-column: 1 / 4;
+  grid-row: 1;
+  background-color: #CBE4DE;
+  text-align: center;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.Parameters {
+  grid-column: 2;
+  grid-row: 2;
+  background-color: #0E8388;
+
+} */
+
+#root {
+  height: 100%;
+  width: 100%;
+}
+
+.App {
+  height: 100%;
+  width: 100%;
+}
+
+.Script {
   display: flex;
-  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  background-color: #f9f9f9;
   align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
+  overflow: hidden;
+  margin-top: -50px;
+}
+
+.inputs {
+  margin-left: 30px;
+}
+
+.slider {
+  margin-top: 20px; 
+
+}
+
+.checkbox {
+
+  margin-top: 20px; 
+}
+
+.header-spacing {
+margin-bottom: 2px;
+}
+
+.download-button {
+  background-color: blue;
   color: white;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 10px;
+  margin-bottom: 10px;
 }
 
-.App-link {
-  color: #61dafb;
+.actions-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
+
