@@ -1,7 +1,5 @@
 import React from "react";
 import Sketch from "react-p5";
-import * as d3 from 'd3-voronoi';
-import { polygonContains } from 'd3-polygon';
 
 	export default (props) => {
 
@@ -18,6 +16,16 @@ import { polygonContains } from 'd3-polygon';
 	//----------------
 	//Helper Functions
 	//----------------
+
+	function scaleZeroedVectorsToCanvas(p5, points, width){
+		console.log("szvtc", points);
+
+		let scaled_points = [];
+		points.forEach(point => {
+			scaled_points.push(point.mult(p5.width/width).copy());
+		});
+		return scaled_points;
+	}
 
 	function scaleVectorsToCanvas(p5, points){
 		console.log("svtc", points);
@@ -64,7 +72,6 @@ import { polygonContains } from 'd3-polygon';
 	//generate a spline using points as array of [x,y] arrays
 	function generateSpline(p5, points){
 		p5.noFill();
-		p5.strokeWeight(6);
 		console.log(points.length);
 		p5.beginShape();
 		p5.curveVertex(points[0][0], points[0][1]);
@@ -76,10 +83,6 @@ import { polygonContains } from 'd3-polygon';
 	}
 
 	function createGlyph(p5, points){
-		p5.background(255);
-		p5.stroke("black");
-		p5.strokeWeight(6);
-
 		generateSpline(p5, points);
 	}
 
@@ -117,21 +120,69 @@ import { polygonContains } from 'd3-polygon';
 	}
 
 	//----------------
+	//GlyphBox Function
+	//----------------
+
+	function placeGlyphsInGlyphBox(p5, pointsArr, horizontalSegments, verticalSegments){
+		let row = [];
+		let col = [];
+		let glyph = [];
+		let horizontalCounter = 0;
+		let verticalCounter = 0;
+
+		for(let i = 0; i < pointsArr.length; i++){
+			for(let j = 0; j < pointsArr[i].length; j++){
+				let point = pointsArr[i][j].copy();
+				point.add(horizontalCounter * 2 + 1, verticalCounter * 2 + 1);
+				col.push(point);
+			}
+			horizontalCounter++;
+			if(horizontalCounter === horizontalSegments){
+				verticalCounter++;
+				horizontalCounter = 0;
+				row.push(col);
+				col = [];
+			}
+		}
+		return row;
+	}
+
+	//----------------
 	//Driver Function
 	//----------------
 
 	const draw = (p5) => {
-		p5.background(0);
+		p5.background(255);
 		// NOTE: Do not use setState in the draw function or in functions that are executed
 		// in the draw function...
 		// please use normal variables or class properties for these purposes
 
 		let centroids = generateGlyphDomain(p5);
 		console.log("centroids", centroids);
+
+		const horizontalSegments = 20; 
+		const verticalSegments = 20;
+
+		let glyphsArr = [];
+		for(let i = 0; i < horizontalSegments * verticalSegments; i++){
+			let points = generateRandomPointsNaive(p5, centroids);
+			glyphsArr.push(points);
+		}
+
 		let points = generateRandomPointsNaive(p5, centroids);
 		console.log("points", points);
+
+		let glyphBox = placeGlyphsInGlyphBox(p5, glyphsArr, horizontalSegments, verticalSegments);
+		console.log("glyphBox", glyphBox);
 		
-		createGlyph(p5, arrayVectorToPair(scaleVectorsToCanvas(p5, points)));
+		p5.stroke("black");
+		p5.strokeWeight(1);
+
+		for(let i = 0; i < glyphBox.length; i++){
+			createGlyph(p5, arrayVectorToPair(scaleZeroedVectorsToCanvas(p5, glyphBox[i], horizontalSegments * 2)));
+		}
+		
+		
 
 	};
 
