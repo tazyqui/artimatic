@@ -16,3 +16,19 @@
   justify-content: center;
   width: 100%;
 }
+
+.text {
+  text-align: right;
+}
+
+.parent-container {
+  position: relative;
+  padding-right: 20px;
+}
+
+.Button2 {
+  margin-left: 60vw;
+  margin-right: 20px;
+  z-index: 2;
+
+}
