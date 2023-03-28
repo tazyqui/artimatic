@@ -46,6 +46,7 @@ import P5InstanceContext from '../P5InstanceContext';
 		return scaled_points;
 	}
 
+	//Individual Glyph Drawing
 	function scaleVectorsToCanvas(p5, points){
 		console.log("svtc", points);
 		let scaled_points = [];
@@ -171,8 +172,6 @@ import P5InstanceContext from '../P5InstanceContext';
 	//----------------
 
 	const draw = (p5) => {
-		p5.background(255);
-
 		// NOTE: Do not use setState in the draw function or in functions that are executed
 		// in the draw function...
 		// please use normal variables or class properties for these purposes
@@ -204,7 +203,7 @@ import P5InstanceContext from '../P5InstanceContext';
 		
 		if (!p5Instance) {
 			setP5Instance(p5);
-		  }
+		}
 
 	};
 
