@@ -94,9 +94,9 @@ import P5InstanceContext from '../P5InstanceContext';
 		p5.noFill();
 		console.log(points.length);
 		p5.beginShape();
-		p5.curveVertex(points[0][0], points[0][1]);
+		p5.curveVertex(points[0].x, points[0].y);
 		points.forEach(point => {
-			p5.curveVertex(point[0], point[1]);
+			p5.curveVertex(point.x, point.y);
 		})
 		p5.curveVertex(points[points.length-1].x, points[points.length-1].y);
 		p5.endShape();
@@ -198,7 +198,7 @@ import P5InstanceContext from '../P5InstanceContext';
 		p5.strokeWeight(1);
 
 		for(let i = 0; i < glyphBox.length; i++){
-			createGlyph(p5, arrayVectorToPair(scaleZeroedVectorsToCanvas(p5, glyphBox[i], horizontalSegments * 2)));
+			createGlyph(p5, scaleZeroedVectorsToCanvas(p5, glyphBox[i], horizontalSegments * 2));
 		}
 		
 		if (!p5Instance) {
