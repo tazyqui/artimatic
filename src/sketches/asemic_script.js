@@ -119,6 +119,56 @@ import Sketch from "react-p5";
 		return points;
 	}
 
+<<<<<<< Updated upstream
+=======
+	//given array of points, squish their values by given factor of x and y
+	function squishPointsVertically(p5, points, factorX, factorY){
+		points.forEach(point => point.p5.mult([factorX,factorY])); //directly change the array
+		//return points.forEach(point => point.p5.mult([factorX,factorY])); //return a new array
+	}
+	
+	//given array of points, rotate each point by a given angle 
+	function rotatePoints(p5, points, angle){
+		points.forEach(point => point.p5.rotate(angle)); //directly change the array
+		//return points.map(point => point.p5.rotate(angle)); //return a new array
+	}
+
+	//given a singular glyph (array of points), offset the points by factor of x and y
+	function offsetGlyph(p5, glyph, offsetX, offsetY){
+		glyph.forEach(point => point.p5.add(offsetX, offsetY)); //directly change the array
+		//return glyph.map(point => point.p5.add(offsetX, offsetY)); //return a new array
+	}
+
+	//given a row of glyphs as array of points, return array containing subarray of points. (Variance cannot be greater than or equal to median)
+	function applyWordLengthVariation(p5, glyphsRow, numOfCtrlPts, median, variance){
+		if(variance >= median){
+			return glyphsRow;
+		}
+
+		let length = p5.random(median - variance, median + variance);
+		let currLength = 1;
+		numOfCtrlPts = 5; //temp
+		let arrayOfSubArrays = [];
+		
+		for(let i = 0; i < glyphsRow.length; i+=numOfCtrlPts){
+			if(currLength != length || i == glyphsRow.length - 1){
+				for(let j = i; j < numOfCtrlPts; j++){
+					arrayOfSubArrays.push(glyphsRow[j]);
+				}
+				currLength++;
+				continue;
+			}
+			length = p5.random(median - variance, median + variance);
+		}		
+
+		return arrayOfSubArrays;
+	}
+
+	
+
+
+
+>>>>>>> Stashed changes
 	//----------------
 	//GlyphBox Function
 	//----------------
