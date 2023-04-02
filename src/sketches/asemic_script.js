@@ -174,22 +174,18 @@ import P5InstanceContext from '../P5InstanceContext';
 		return points;
 	}
 
-	//given array of points, squish their values by given factor of x and y
-	function squishPoints(p5, points, factorX, factorY){
-		points.forEach(point => point.p5.mult([factorX,factorY])); //directly change the array
-		//return points.forEach(point => point.p5.mult([factorX,factorY])); //return a new array
+	//given array of points, squish their values by given factor of x and y and return it as an array
+	function squishPoints(points, factorX, factorY) {
+		return points.map(point => {return point.copy().mult(factorX, factorY)});
 	}
-	
-	//given array of points, rotate each point by a given angle 
-	function rotatePoints(p5, points, angle){
-		points.forEach(point => point.p5.rotate(angle)); //directly change the array
-		//return points.map(point => point.p5.rotate(angle)); //return a new array
+	//given array of points, rotate each point by a given angle and return it as an array
+	function rotatePoints(points, angle){
+		return points.map(point => {return point.copy().rotate(angle)});
 	}
 
-	//given a singular glyph (array of points), offset the points by factor of x and y
-	function offsetGlyph(p5, glyph, offsetX, offsetY){
-		glyph.forEach(point => point.p5.add(offsetX, offsetY)); //directly change the array
-		//return glyph.map(point => point.p5.add(offsetX, offsetY)); //return a new array
+	//given a singular glyph (array of points), offset the points by factor of x and y and return it as an array
+	function offsetGlyph(points, offsetX, offsetY){
+		return points.map(point => {return point.copy().add(offsetX, offsetY)});
 	}
 
 	//given a row of glyphs as array of points, return array containing subarray of points. (Variance cannot be greater than or equal to median)
@@ -257,7 +253,7 @@ import P5InstanceContext from '../P5InstanceContext';
 		p5.background(255);
 		let centroids = generateGlyphDomain(p5);
 		console.log("centroids", centroids);
-
+	
 		const horizontalSegments = 20; 
 		const verticalSegments = 20;
 
@@ -267,8 +263,8 @@ import P5InstanceContext from '../P5InstanceContext';
 			glyphsArr.push(points);
 		}
 
-		let points = generateRandomPointsNaive(p5, centroids);
-		console.log("points", points);
+		//let points = generateRandomPointsNaive(p5, centroids);
+		//console.log("points", points);
 
 		let glyphBox = placeGlyphsInGlyphBox(p5, glyphsArr, horizontalSegments, verticalSegments);
 		console.log("glyphBox", glyphBox);
