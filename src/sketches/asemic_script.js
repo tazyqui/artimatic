@@ -86,6 +86,41 @@ import Sketch from "react-p5";
 		generateSpline(p5, points);
 	}
 
+	//generate a Bezier curve of any order using p5 vectors and return points at each steps
+	function generateBezier(p5, points, steps) {
+		console.log('bezier points', points);
+	   let intermediatePoints = [];
+		p5.noFill();
+		p5.beginShape();
+		for (let t = 0; t <= 1; t += 1/steps) {
+			  let x = 0;
+			let y = 0;
+			for (let i = 0; i < points.length; i++) {
+				let a = factorial(points.length - 1) / (factorial(i) * factorial(points.length - 1 - i));
+				let b = Math.pow(1 - t, points.length - 1 - i) * Math.pow(t, i);
+				x += a * b * points[i].x;
+				y += a * b * points[i].y;
+			   
+			 }
+			  p5.vertex(x, y);
+		   intermediatePoints.push(p5.createVector(x,y));
+		}
+		p5.endShape();
+	   return intermediatePoints;
+	   
+   }
+	 
+	function factorial(n) {
+		if (n === 0) {
+		   return 1;
+		}
+		let result = 1;
+		for (let i = 1; i <= n; i++) {
+			result *= i;
+		}
+		return result;
+   }
+
 	//----------------
 	//Generate Random Points from Centroids Functions
 	//----------------
@@ -119,10 +154,8 @@ import Sketch from "react-p5";
 		return points;
 	}
 
-<<<<<<< Updated upstream
-=======
 	//given array of points, squish their values by given factor of x and y
-	function squishPointsVertically(p5, points, factorX, factorY){
+	function squishPoints(p5, points, factorX, factorY){
 		points.forEach(point => point.p5.mult([factorX,factorY])); //directly change the array
 		//return points.forEach(point => point.p5.mult([factorX,factorY])); //return a new array
 	}
@@ -164,11 +197,7 @@ import Sketch from "react-p5";
 		return arrayOfSubArrays;
 	}
 
-	
 
-
-
->>>>>>> Stashed changes
 	//----------------
 	//GlyphBox Function
 	//----------------
