@@ -109,7 +109,7 @@ import P5InstanceContext from '../P5InstanceContext';
 	//generate a Bezier curve of any order using p5 vectors and return points at each steps
 	function generateBezier(p5, points, steps) {
 		console.log('bezier points', points);
-	   let intermediatePoints = [];
+	    let intermediatePoints = [];
 		p5.noFill();
 		p5.beginShape();
 		for (let t = 0; t <= 1; t += 1/steps) {
@@ -126,9 +126,8 @@ import P5InstanceContext from '../P5InstanceContext';
 		   intermediatePoints.push(p5.createVector(x,y));
 		}
 		p5.endShape();
-	   return intermediatePoints;
-	   
-   }
+	    return intermediatePoints;
+	}
 	 
 	function factorial(n) {
 		if (n === 0) {
@@ -139,7 +138,7 @@ import P5InstanceContext from '../P5InstanceContext';
 			result *= i;
 		}
 		return result;
-   }
+    }
 
 	//----------------
 	//Generate Random Points from Centroids Functions
@@ -200,7 +199,7 @@ import P5InstanceContext from '../P5InstanceContext';
 		let arrayOfSubArrays = [];
 		
 		for(let i = 0; i < glyphsRow.length; i+=numOfCtrlPts){
-			if(currLength != length || i == glyphsRow.length - 1){
+			if(currLength !== length || i === glyphsRow.length - 1){
 				for(let j = i; j < numOfCtrlPts; j++){
 					arrayOfSubArrays.push(glyphsRow[j]);
 				}
@@ -250,36 +249,50 @@ import P5InstanceContext from '../P5InstanceContext';
 		// NOTE: Do not use setState in the draw function or in functions that are executed
 		// in the draw function...
 		// please use normal variables or class properties for these purposes
+		
+		//--- User Input Variables ---//
+		let rotationMedian = 0;
+		let rotationVariance = 0;
+		let squishMedian = 1;
+		let squishVariance = 0;
+		let lineOffsetMedian = 0;
+		let lineOffsetVariance = 0;
+		let wordLengthMedian = 20;
+		let wordLengthVariance = 0;
+
+		//--- Drawing Settings ---//
 		p5.background(255);
+		p5.stroke("black");
+		p5.strokeWeight(1);
+
+		//--- Generate Centroids ---//
 		let centroids = generateGlyphDomain(p5);
 		console.log("centroids", centroids);
 	
+		//--- Define Division of Screen Space ---//
 		const horizontalSegments = 20; 
 		const verticalSegments = 20;
 
+		//--- Create a Glyph for Each Segment ---//
 		let glyphsArr = [];
 		for(let i = 0; i < horizontalSegments * verticalSegments; i++){
 			let points = generateRandomPointsNaive(p5, centroids);
 			glyphsArr.push(points);
 		}
-
-		//let points = generateRandomPointsNaive(p5, centroids);
-		//console.log("points", points);
-
+		
+		//--- Create the Box of Horizontal Segments x Vertical Segments ---//
 		let glyphBox = placeGlyphsInGlyphBox(p5, glyphsArr, horizontalSegments, verticalSegments);
 		console.log("glyphBox", glyphBox);
-		
-		p5.stroke("black");
-		p5.strokeWeight(1);
 
+		//--- Convert Rows of Glyphs (len 40) into Screen Space and Draw ---//
 		for(let i = 0; i < glyphBox.length; i++){
 			createGlyph(p5, scaleZeroedVectorsToCanvas(p5, glyphBox[i], horizontalSegments * 2));
 		}
 		
+		//--- Frontend Requirements ---//
 		if (!p5Instance) {
 			setP5Instance(p5);
 		}
-
 	};
 
 	return (
