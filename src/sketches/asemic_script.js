@@ -251,6 +251,8 @@ import P5InstanceContext from '../P5InstanceContext';
 		// please use normal variables or class properties for these purposes
 		
 		//--- User Input Variables ---//
+		let centroidsPerCentroidSet = 5;
+		let centroidSetsForGlyphGeneration = 1;
 		let rotationMedian = 0;
 		let rotationVariance = 0;
 		let squishMedian = 1;
@@ -266,8 +268,13 @@ import P5InstanceContext from '../P5InstanceContext';
 		p5.strokeWeight(1);
 
 		//--- Generate Centroids ---//
-		let centroids = generateGlyphDomain(p5);
-		console.log("centroids", centroids);
+		let centroidSet = [];
+		for(let i = 0; i < centroidSetsForGlyphGeneration; i++){
+			let centroids = generateGlyphDomain(p5);
+			centroidSet.push(centroids);
+		    console.log("centroids", centroids);
+		}
+		console.log("centroid set", centroidSet);
 	
 		//--- Define Division of Screen Space ---//
 		const horizontalSegments = 20; 
@@ -276,6 +283,8 @@ import P5InstanceContext from '../P5InstanceContext';
 		//--- Create a Glyph for Each Segment ---//
 		let glyphsArr = [];
 		for(let i = 0; i < horizontalSegments * verticalSegments; i++){
+			let centroidChoice = Math.floor(Math.random() * centroidSetsForGlyphGeneration);
+			let centroids = centroidSet[centroidChoice];
 			let points = generateRandomPointsNaive(p5, centroids);
 			glyphsArr.push(points);
 		}
