@@ -173,18 +173,24 @@ import P5InstanceContext from '../P5InstanceContext';
 		return points;
 	}
 
-	//given array of points, squish their values by given factor of x and y and return it as an array
-	function squishPoints(points, factorX, factorY) {
-		return points.map(point => {return point.copy().mult(factorX, factorY)});
+	//given array of points, squish their values by given factor and return it as an array
+	function squishPoints(p5, points, squishFactor, squishVariance) {
+		points.forEach(point =>{
+			point.mult(squishFactor + p5.random(-squishVariance, squishVariance));
+		});
 	}
 	//given array of points, rotate each point by a given angle and return it as an array
-	function rotatePoints(points, angle){
-		return points.map(point => {return point.copy().rotate(angle)});
+	function rotatePoints(p5, points, angleMedian, angleVariance){
+		points.forEach(point =>{
+			point.rotate(angleMedian + p5.random(-angleVariance, angleVariance))
+		});
 	}
 
 	//given a singular glyph (array of points), offset the points by factor of x and y and return it as an array
-	function offsetGlyph(points, offsetX, offsetY){
-		return points.map(point => {return point.copy().add(offsetX, offsetY)});
+	function offsetGlyph(p5, points, offsetMedian, offsetVariance){
+		points.forEach(point =>{
+			point.add(0, offsetMedian + p5.random(-offsetVariance, offsetVariance))
+		});
 	}
 
 	//given a row of glyphs as array of points, return array containing subarray of points. (Variance cannot be greater than or equal to median)
@@ -288,6 +294,10 @@ import P5InstanceContext from '../P5InstanceContext';
 			let points = generateRandomPointsNaive(p5, centroids);
 			glyphsArr.push(points);
 		}
+		
+		//--- Modify Points ---//
+		glyphsArr = squishPoints(p5, glyphsArr, squishMedian, squishVariance);
+
 		
 		//--- Create the Box of Horizontal Segments x Vertical Segments ---//
 		let glyphBox = placeGlyphsInGlyphBox(p5, glyphsArr, horizontalSegments, verticalSegments);
