@@ -173,47 +173,52 @@ import P5InstanceContext from '../P5InstanceContext';
 		return points;
 	}
 
-	//given array of points, squish their values by given factor and return it as an array
-	function squishPoints(p5, points, squishFactor, squishVariance) {
-		points.forEach(point =>{
-			point.mult(squishFactor + p5.random(-squishVariance, squishVariance));
+	function squishGlyphs(p5, glyphs, squishXFactor, squishYFactor, squishXVariance, squishYVariance) {
+		glyphs.forEach(points =>{
+			points.forEach(point =>{
+				point.mult(squishXFactor + p5.random(-squishXVariance, squishXVariance), squishYFactor + p5.random(-squishYVariance, squishYVariance));
+			})
 		});
 	}
-	//given array of points, rotate each point by a given angle and return it as an array
-	function rotatePoints(p5, points, angleMedian, angleVariance){
-		points.forEach(point =>{
-			point.rotate(angleMedian + p5.random(-angleVariance, angleVariance))
+	
+	function rotateGlyphs(p5, glyphs, angleMedian, angleVariance){
+		glyphs.forEach(points =>{
+			points.forEach(point =>{
+				point.rotate(angleMedian + p5.random(-angleVariance, angleVariance))			
+			})
 		});
 	}
-
-	//given a singular glyph (array of points), offset the points by factor of x and y and return it as an array
-	function offsetGlyph(p5, points, offsetMedian, offsetVariance){
-		points.forEach(point =>{
-			point.add(0, offsetMedian + p5.random(-offsetVariance, offsetVariance))
+	
+	function offsetGlyphs(p5, glyphs, offsetVariance){
+		glyphs.forEach(points =>{
+			let offset = p5.random(-offsetVariance, offsetVariance);
+			points.forEach(point =>{
+				point.add(0, offset)			
+			})
 		});
 	}
 
 	//given a row of glyphs as array of points, return array containing subarray of points. (Variance cannot be greater than or equal to median)
 	function applyWordLengthVariation(p5, glyphsRow, numOfCtrlPts, median, variance){
-		if(variance >= median){
-			return glyphsRow;
-		}
-
-		let length = p5.random(median - variance, median + variance);
-		let currLength = 1;
-		numOfCtrlPts = 5; //temp
 		let arrayOfSubArrays = [];
+
+		let totalLength = p5.floor(glyphsRow.length/numOfCtrlPts) - 1;
+		let coveredLength = 0;
+
+		if(variance >= median || median >= totalLength){
+			arrayOfSubArrays.push(glyphsRow);
+			return arrayOfSubArrays;
+		}
 		
-		for(let i = 0; i < glyphsRow.length; i+=numOfCtrlPts){
-			if(currLength !== length || i === glyphsRow.length - 1){
-				for(let j = i; j < numOfCtrlPts; j++){
-					arrayOfSubArrays.push(glyphsRow[j]);
-				}
-				currLength++;
-				continue;
+		while(coveredLength !== totalLength){
+			let length = p5.floor(p5.random(median - variance, median + variance));
+			console.log("length", length);
+			if(length + coveredLength > totalLength){
+				length = totalLength - coveredLength;
 			}
-			length = p5.random(median - variance, median + variance);
-		}		
+			arrayOfSubArrays.push(glyphsRow.slice(coveredLength * numOfCtrlPts, length * numOfCtrlPts));
+			coveredLength += length;
+		}
 
 		return arrayOfSubArrays;
 	}
@@ -259,12 +264,13 @@ import P5InstanceContext from '../P5InstanceContext';
 		//--- User Input Variables ---//
 		let centroidsPerCentroidSet = 5;
 		let centroidSetsForGlyphGeneration = 1;
+		let squishXMedian = 0.25;
+		let squishXVariance = 0;
+		let squishYMedian = 1;
+		let squishYVariance = 0;
 		let rotationMedian = 0;
 		let rotationVariance = 0;
-		let squishMedian = 1;
-		let squishVariance = 0;
-		let lineOffsetMedian = 0;
-		let lineOffsetVariance = 0;
+		let lineOffsetVariance = 0.5;
 		let wordLengthMedian = 20;
 		let wordLengthVariance = 0;
 
@@ -295,17 +301,28 @@ import P5InstanceContext from '../P5InstanceContext';
 			glyphsArr.push(points);
 		}
 		
-		//--- Modify Points ---//
-		glyphsArr = squishPoints(p5, glyphsArr, squishMedian, squishVariance);
+		//--- Modify Points in Unit Circle Space ---//
+		squishGlyphs(p5, glyphsArr, squishXMedian, squishYMedian, squishXVariance, squishYVariance);
+		rotateGlyphs(p5, glyphsArr, rotationMedian, rotationVariance);
+		offsetGlyphs(p5, glyphsArr, lineOffsetVariance);
 
-		
 		//--- Create the Box of Horizontal Segments x Vertical Segments ---//
 		let glyphBox = placeGlyphsInGlyphBox(p5, glyphsArr, horizontalSegments, verticalSegments);
 		console.log("glyphBox", glyphBox);
 
-		//--- Convert Rows of Glyphs (len 40) into Screen Space and Draw ---//
+		//--- Slice Glyph Rows in Several Segments ---//
+		let segmentedGlyphBox = [];
 		for(let i = 0; i < glyphBox.length; i++){
-			createGlyph(p5, scaleZeroedVectorsToCanvas(p5, glyphBox[i], horizontalSegments * 2));
+			let segmentedGlyphRow = applyWordLengthVariation(p5, glyphBox[i], 5, wordLengthMedian, wordLengthVariance)
+			console.log("Segmented glyph row", segmentedGlyphRow);
+			segmentedGlyphBox.push(segmentedGlyphRow);
+		}
+
+		//--- Convert Rows of Glyphs (len 40) into Screen Space and Draw ---//
+		for(let i = 0; i < segmentedGlyphBox.length; i++){
+			for(let j = 0; j < segmentedGlyphBox[i].length; j++){
+				createGlyph(p5, scaleZeroedVectorsToCanvas(p5, segmentedGlyphBox[i][j], horizontalSegments * 2));
+			}
 		}
 		
 		//--- Frontend Requirements ---//
