@@ -275,6 +275,10 @@ import P5InstanceContext from '../P5InstanceContext';
 		let wordLengthMedian = 5;
 		let wordLengthVariance = 2;
 
+		//--- Define Division of Screen Space ---//
+		let horizontalSegments = 20; 
+		let verticalSegments = 20;
+
 		//--- Drawing Settings ---//
 		p5.background(255);
 		p5.stroke("black");
@@ -288,10 +292,6 @@ import P5InstanceContext from '../P5InstanceContext';
 		    console.log("centroids", centroids);
 		}
 		console.log("centroid set", centroidSet);
-	
-		//--- Define Division of Screen Space ---//
-		const horizontalSegments = 20; 
-		const verticalSegments = 20;
 
 		//--- Create a Glyph for Each Segment ---//
 		let glyphsArr = [];
