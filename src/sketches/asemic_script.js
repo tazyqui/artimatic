@@ -202,7 +202,7 @@ import P5InstanceContext from '../P5InstanceContext';
 	function applyWordLengthVariation(p5, glyphsRow, numOfCtrlPts, median, variance){
 		let arrayOfSubArrays = [];
 
-		let totalLength = p5.floor(glyphsRow.length/numOfCtrlPts) - 1;
+		let totalLength = p5.floor(glyphsRow.length/numOfCtrlPts);
 		let coveredLength = 0;
 
 		if(variance >= median || median >= totalLength){
@@ -216,7 +216,8 @@ import P5InstanceContext from '../P5InstanceContext';
 			if(length + coveredLength > totalLength){
 				length = totalLength - coveredLength;
 			}
-			arrayOfSubArrays.push(glyphsRow.slice(coveredLength * numOfCtrlPts, length * numOfCtrlPts));
+			console.log("glyphsRow before slicing", glyphsRow);
+			arrayOfSubArrays.push(glyphsRow.slice(coveredLength * numOfCtrlPts, (coveredLength + length) * numOfCtrlPts));
 			coveredLength += length;
 		}
 
@@ -271,8 +272,8 @@ import P5InstanceContext from '../P5InstanceContext';
 		let rotationMedian = 0;
 		let rotationVariance = 0;
 		let lineOffsetVariance = 0.5;
-		let wordLengthMedian = 20;
-		let wordLengthVariance = 0;
+		let wordLengthMedian = 5;
+		let wordLengthVariance = 2;
 
 		//--- Drawing Settings ---//
 		p5.background(255);
@@ -313,10 +314,11 @@ import P5InstanceContext from '../P5InstanceContext';
 		//--- Slice Glyph Rows in Several Segments ---//
 		let segmentedGlyphBox = [];
 		for(let i = 0; i < glyphBox.length; i++){
-			let segmentedGlyphRow = applyWordLengthVariation(p5, glyphBox[i], 5, wordLengthMedian, wordLengthVariance)
+			let segmentedGlyphRow = applyWordLengthVariation(p5, glyphBox[i], 5, wordLengthMedian, wordLengthVariance);
 			console.log("Segmented glyph row", segmentedGlyphRow);
 			segmentedGlyphBox.push(segmentedGlyphRow);
 		}
+		console.log("segmentedGlyphBox", segmentedGlyphBox);
 
 		//--- Convert Rows of Glyphs (len 40) into Screen Space and Draw ---//
 		for(let i = 0; i < segmentedGlyphBox.length; i++){
