@@ -1,53 +1,42 @@
 import './App.css';
-import React, { useState } from 'react';
-import AsemicScript from './sketches/asemic_script';
-import Footer from  './components/Footer';
-import Header from './components/Header';
-import Inputs from './components/Inputs';
-import Outputs from './components/Outputs';
+import React from 'react';
+import { RouterProvider, createBrowserRouter, Outlet } from 'react-router-dom';
+import Sketch from './pages/Sketch';
+import Home from './pages/Home';
 import SideBar from './animation/SideBar';
-import Download from './components/Download';
-import Regenerate from "./components/Regenerate";
-import P5InstanceContext from './P5InstanceContext';
 
+const Layout = () => {
+  return (
+    <>
+      <SideBar />
+      <Outlet />
+    </>
+  );
+};
+
+const router = createBrowserRouter([
+  {
+    path: '/',
+    element: <Layout />,
+    children: [
+      {
+        path: '/',
+        element: <Home />,
+      },
+      {
+        path: '/sketch',
+        element: <Sketch />,
+      }
+    ]
+      }
+])
 
 function App() {
-  const [p5Instance, setP5Instance] = useState(null);
-  const [regenerate, setRegenerate] = useState(0);
-
-  const handleRegenerate = () => {
-    setRegenerate((prevRegenerate) => prevRegenerate + 1);
-  };
-
   return (
-    <P5InstanceContext.Provider value={p5Instance}>
-      <div className="App">
-      <div className='Header'>
-        <SideBar />
-        <div className="actions-container">
-        <Download p5Instance={p5Instance} />
-        <Regenerate onRegenerate={handleRegenerate} />
-        </div>
-      </div>
-
-      {/* <div className="Header">
-        <Header /> 
-      </div> */}
-
-      <div className="Script">
-        <AsemicScript setP5Instance={setP5Instance} regenerate={regenerate}/>
-      </div>
-
-      {/* <div className = "Parameters">
-        <Inputs />
-      </div>
-
-      <div className="Footer">
-        <Footer />
-      </div> */}
-      </div>
-    </P5InstanceContext.Provider>
-  );
+    <div className='app'>
+      <RouterProvider router={router} />
+    </div>
+  )
 }
 
 export default App;

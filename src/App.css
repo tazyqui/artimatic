@@ -89,6 +89,18 @@ margin-bottom: 2px;
   margin-bottom: 10px;
 }
 
+.begin-button {
+  background-color: rgb(253, 149, 14);
+  color: white;
+  padding: 15px 35px 15px 35px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  font-size: 24px;
+}
+
 .actions-container {
   display: flex;
   justify-content: center;
@@ -105,3 +117,6 @@ margin-bottom: 2px;
 
 }
 
+body {
+  overflow: hidden;
+}
