@@ -13,9 +13,12 @@ const TopSection = () => {
       <a href='/'>
         <img src={logo} className="App-logo" style={{ width: '165px', height: 'auto', marginLeft: '20px' }} alt="logo" /> 
       </a>
-      <a href='/sketch'>
-        <div className='Sketch_button'>Sketch</div>
+      {location.pathname === '/' && (
+      <a href='/sketch' className="align-right">
+        <div className='Sketch_button download-button'>Visit Sketch</div>
       </a>
+      )}
+
       {location.pathname === '/sketch' && (
         <div className="Button2">
         Find Out How It Works

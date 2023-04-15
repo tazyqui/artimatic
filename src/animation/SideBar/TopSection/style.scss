@@ -8,6 +8,14 @@
     display: flex;
     align-items: center; 
     justify-content: center; 
+
+    .align-right {
+      margin-left: auto;
+    }
+
+    .Sketch_button {
+    margin-right: 10px;
+  }
   }
 
 .SideBar__TopSection__content {
