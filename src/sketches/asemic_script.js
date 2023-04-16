@@ -5,10 +5,19 @@ import P5InstanceContext from '../P5InstanceContext';
 	export default (props) => {
 
 		const CANVAS_SIZE = 500;
-		const CANVAS_WIDTH = 0.8*window.innerWidth;
-		const CANVAS_HEIGHT = 0.8*window.innerHeight;
-		const CENTER = CANVAS_SIZE/2;
-    	const [p5Instance, setP5Instance] = useState(null);
+  		const CANVAS_WIDTH = window.innerWidth;
+  		const CANVAS_HEIGHT = window.innerHeight;
+ 		const CENTER = CANVAS_SIZE / 2;
+  		const [p5Instance, setP5Instance] = useState(null);
+  		const [sliderValue, setSliderValue] = useState(0.25); 
+  		const [squishXMedian, setSquishXMedian] = useState(0.25);
+		const [squishXVariance, setSquishXVariance] = useState(0);
+		const [showSlider, setShowSlider] = useState(false); 
+		const [squishXVarianceValue, setSquishXVarianceValue] = useState(0);
+
+
+
+
 
 		useEffect(() => {
 			if (p5Instance) {
@@ -18,19 +27,42 @@ import P5InstanceContext from '../P5InstanceContext';
 			  props.setP5Instance(null);
 			};
 		  }, [p5Instance]);
-
+		
 		  useEffect(() => {
 			if (p5Instance) {
 			  p5Instance.redraw();
 			}
 		  }, [p5Instance, props.regenerate]);
+		
+		  useEffect(() => {
+			if (p5Instance) {
+			  p5Instance.redraw();
+			}
+		  }, [p5Instance, squishXMedian]);
+
+		  useEffect(() => {
+			if (p5Instance) {
+				p5Instance.redraw();
+			}
+		}, [p5Instance, squishXVariance]);
 
 	const setup = (p5, canvasParentRef) => {
 		// use parent to render the canvas in this ref
 		// (without that p5 will render the canvas outside of your component)
 		p5.createCanvas(CANVAS_WIDTH, CANVAS_HEIGHT).parent(canvasParentRef);
+
 		p5.noLoop();
 	};
+
+
+	const handleSliderChange = (event) => {
+		console.log("Slider value changed:", event.target.value);
+		setSliderValue(event.target.value);
+		setSquishXMedian(event.target.value);
+		setSquishXVariance(event.target.value);
+	};
+
+	
 
 	//----------------
 	//Helper Functions
@@ -173,10 +205,10 @@ import P5InstanceContext from '../P5InstanceContext';
 		return points;
 	}
 
-	function squishGlyphs(p5, glyphs, squishXFactor, squishYFactor, squishXVariance, squishYVariance) {
+	function squishGlyphs(p5, glyphs, squishXFactor, squishYFactor, squishXVarianceValue, squishYVariance) {
 		glyphs.forEach(points =>{
 			points.forEach(point =>{
-				point.mult(squishXFactor + p5.random(-squishXVariance, squishXVariance), squishYFactor + p5.random(-squishYVariance, squishYVariance));
+				point.mult(squishXFactor + p5.random(-squishXVarianceValue, squishXVarianceValue), squishYFactor + p5.random(-squishYVariance, squishYVariance));
 			})
 		});
 	}
@@ -303,7 +335,7 @@ import P5InstanceContext from '../P5InstanceContext';
 		}
 		
 		//--- Modify Points in Unit Circle Space ---//
-		squishGlyphs(p5, glyphsArr, squishXMedian, squishYMedian, squishXVariance, squishYVariance);
+		squishGlyphs(p5, glyphsArr, sliderValue, squishYMedian, squishXVarianceValue, squishYVariance);
 		rotateGlyphs(p5, glyphsArr, rotationMedian, rotationVariance);
 		offsetGlyphs(p5, glyphsArr, lineOffsetVariance);
 
@@ -331,14 +363,43 @@ import P5InstanceContext from '../P5InstanceContext';
 		if (!p5Instance) {
 			setP5Instance(p5);
 		}
+		
 	};
 
 	return (
-        <P5InstanceContext.Provider value={p5Instance}>
-            <div>
-                <Sketch setup={setup} draw={draw} />
-                {/* Other components that may require the p5Instance */}
-            </div>
-        </P5InstanceContext.Provider>
-    );
+		<P5InstanceContext.Provider value={p5Instance}>
+		  <div style={{ position: "relative", width: "100%", height: CANVAS_HEIGHT }}>
+			{showSlider && (
+			  <div style={{ position: "absolute", top: "80px", right: "10px", zIndex: "1", backgroundColor: "#fafafa", width: "200px", padding: "10px" }}>
+				
+				<div style={{ marginBottom: "10px" }}>SquishMedian</div>
+				<div style={{ position: "relative" }}>
+				  <div style={{ position: "absolute", top: 0, left: 0, height: "100%", width: "10px", backgroundColor: "white" }}></div>
+				  <input type="range" min="0" max="1" step="0.01" value={sliderValue} onChange={handleSliderChange} style={{ width: "100%" }} />
+				</div>
+
+				<div style={{ marginBottom: "10px" }}>Input 2</div>
+				<div style={{ position: "relative" }}>
+  				<div style={{ position: "absolute", top: 0, left: 0, height: "100%", width: "10px", backgroundColor: "white" }}></div>
+				  <input
+  type="range"
+  min="0"
+  max="1"
+  step="0.01"
+  value={squishXVarianceValue}
+  onChange={(event) => setSquishXVarianceValue(parseFloat(event.target.value))}
+  style={{ width: "100%" }}
+/>				</div>
+
+
+			  </div>
+			)}
+			<Sketch setup={setup} draw={draw} />
+			<div className="input-container" style={{ position: "absolute", top: "10px", right: "10px", zIndex: "1" }}>
+			  <button className="download-button" onClick={() => setShowSlider(!showSlider)}>Toggle Inputs</button>
+			</div>
+		  </div>
+		</P5InstanceContext.Provider>
+	  );  
+
 };
