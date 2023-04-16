@@ -1,6 +1,6 @@
 import React from 'react';
 import '../Modal.css';
-import video2 from '../space3.mp4';
+import tour from '../tour.mp4';
 
 const Modal = ({ onClose, title, text }) => {
   return (
@@ -11,7 +11,7 @@ const Modal = ({ onClose, title, text }) => {
         </button>
         <h2>{title}</h2>
         <p>{text}</p>
-        <video src={video2} loop controls style={{ maxWidth: '100%', maxHeight: '70vh', marginTop: '20px' }}></video>
+        <video src={tour} loop controls style={{ maxWidth: '90%', maxHeight: '70vh', marginTop: '20px' }}></video>
       </div>
     </div>
   );

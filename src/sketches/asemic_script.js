@@ -9,16 +9,21 @@ import P5InstanceContext from '../P5InstanceContext';
   		const CANVAS_HEIGHT = window.innerHeight;
  		const CENTER = CANVAS_SIZE / 2;
   		const [p5Instance, setP5Instance] = useState(null);
-  		const [sliderValue, setSliderValue] = useState(0.25); 
+		// we define the input variables and their default value
   		const [squishXMedian, setSquishXMedian] = useState(0.25);
-		const [squishXVariance, setSquishXVariance] = useState(0);
+		const [squishXVariance, setSquishXVariance] = useState(0.1);
+		const [squishYMedian, setSquishYMedian] = useState(0.5);
+		const [squishYVariance, setSquishYVariance] = useState(0.9);
+		const [rotationMedian, setrotationMedian] = useState(180);
+		const [rotationVariance, setrotationVariance] = useState(180);
+		const [lineOffsetVariance, setLineOffsetVariance] = useState(0.7);
+		const [wordLengthMedian, setWordLengthMedian] = useState(9);
+		const [wordLengthVariance, setWordLengthVariance] = useState(2);
+		const [horizontalSegments, setHorizontalSegments] = useState(33);
+		const [verticalSegments, setVerticalSegments] = useState(33);
+
 		const [showSlider, setShowSlider] = useState(false); 
-		const [squishXVarianceValue, setSquishXVarianceValue] = useState(0);
-
-
-
-
-
+		
 		useEffect(() => {
 			if (p5Instance) {
 			  props.setP5Instance(p5Instance);
@@ -33,18 +38,13 @@ import P5InstanceContext from '../P5InstanceContext';
 			  p5Instance.redraw();
 			}
 		  }, [p5Instance, props.regenerate]);
-		
+
+		  // add the variables to the useEffect hook		
 		  useEffect(() => {
 			if (p5Instance) {
 			  p5Instance.redraw();
 			}
-		  }, [p5Instance, squishXMedian]);
-
-		  useEffect(() => {
-			if (p5Instance) {
-				p5Instance.redraw();
-			}
-		}, [p5Instance, squishXVariance]);
+		  }, [p5Instance, squishXMedian, horizontalSegments,verticalSegments,wordLengthVariance,squishXVariance,wordLengthMedian, lineOffsetVariance,squishYMedian, squishYVariance,rotationMedian,rotationVariance]);
 
 	const setup = (p5, canvasParentRef) => {
 		// use parent to render the canvas in this ref
@@ -54,15 +54,62 @@ import P5InstanceContext from '../P5InstanceContext';
 		p5.noLoop();
 	};
 
-
-	const handleSliderChange = (event) => {
-		console.log("Slider value changed:", event.target.value);
-		setSliderValue(event.target.value);
+	// functions to handle slider changes for inputs 
+	const handleSliderSquishXMedianChange = (event) => {
+		console.log("SquishXMedian Slider value changed:", event.target.value);
 		setSquishXMedian(event.target.value);
-		setSquishXVariance(event.target.value);
-	};
+	  };
 
-	
+	const handleSliderSquishXVarianceChange = (event) => {
+		console.log("SquishXVariance Slider variance value changed:", event.target.value);
+		setSquishXVariance(event.target.value);
+	  };
+
+	  const handleSliderSquishYMedianChange = (event) => {
+		console.log("SquishYMedian Slider value changed:", event.target.value);
+		setSquishYMedian(event.target.value);
+	  };
+
+	const handleSliderSquishYVarianceChange = (event) => {
+		console.log("SquishYVariance Slider variance value changed:", event.target.value);
+		setSquishYVariance(event.target.value);
+	  };
+
+	  const handleSliderRotationMedianChange = (event) => {
+		console.log("SquishYVariance Slider variance value changed:", event.target.value);
+		setrotationMedian(event.target.value);
+	  };
+
+	  const handleSliderRotationVarianceChange = (event) => {
+		console.log("SquishYVariance Slider variance value changed:", event.target.value);
+		setrotationVariance(event.target.value);
+	  };
+
+	  const handleLineOffsetVarianceChange = (event) => {
+		console.log("SquishYVariance Slider variance value changed:", event.target.value);
+		setLineOffsetVariance(event.target.value);
+	  };
+
+	  const handleWordLengthMedianChange = (event) => {
+		console.log("SquishYVariance Slider variance value changed:", event.target.value);
+		setWordLengthMedian(event.target.value);
+	  };
+
+	  const handleWordLengthVarianceChange = (event) => {
+		console.log("SquishYVariance Slider variance value changed:", event.target.value);
+		setWordLengthVariance(event.target.value);
+	  };
+
+	  const handleHorizontalSegmentChange = (event) => {
+		console.log("SquishYVariance Slider variance value changed:", event.target.value);
+		setHorizontalSegments(event.target.value);
+	  };
+
+	  const handleVerticalSegmentChange = (event) => {
+		console.log("SquishYVariance Slider variance value changed:", event.target.value);
+		setVerticalSegments(event.target.value);
+	  };
+
 
 	//----------------
 	//Helper Functions
@@ -205,10 +252,10 @@ import P5InstanceContext from '../P5InstanceContext';
 		return points;
 	}
 
-	function squishGlyphs(p5, glyphs, squishXFactor, squishYFactor, squishXVarianceValue, squishYVariance) {
+	function squishGlyphs(p5, glyphs, squishXFactor, squishYFactor, squishXVariance, squishYVariance) {
 		glyphs.forEach(points =>{
 			points.forEach(point =>{
-				point.mult(squishXFactor + p5.random(-squishXVarianceValue, squishXVarianceValue), squishYFactor + p5.random(-squishYVariance, squishYVariance));
+				point.mult(squishXFactor + p5.random(-squishXVariance, squishXVariance), squishYFactor + p5.random(-squishYVariance, squishYVariance));
 			})
 		});
 	}
@@ -297,19 +344,8 @@ import P5InstanceContext from '../P5InstanceContext';
 		//--- User Input Variables ---//
 		let centroidsPerCentroidSet = 5;
 		let centroidSetsForGlyphGeneration = 1;
-		let squishXMedian = 0.25;
-		let squishXVariance = 0;
-		let squishYMedian = 1;
-		let squishYVariance = 0;
-		let rotationMedian = 0;
-		let rotationVariance = 0;
-		let lineOffsetVariance = 0.5;
-		let wordLengthMedian = 5;
-		let wordLengthVariance = 2;
 
 		//--- Define Division of Screen Space ---//
-		let horizontalSegments = 20; 
-		let verticalSegments = 20;
 
 		//--- Drawing Settings ---//
 		p5.background(255);
@@ -335,7 +371,7 @@ import P5InstanceContext from '../P5InstanceContext';
 		}
 		
 		//--- Modify Points in Unit Circle Space ---//
-		squishGlyphs(p5, glyphsArr, sliderValue, squishYMedian, squishXVarianceValue, squishYVariance);
+		squishGlyphs(p5, glyphsArr, squishXMedian, squishYMedian, squishXVariance, squishYVariance);
 		rotateGlyphs(p5, glyphsArr, rotationMedian, rotationVariance);
 		offsetGlyphs(p5, glyphsArr, lineOffsetVariance);
 
@@ -368,36 +404,86 @@ import P5InstanceContext from '../P5InstanceContext';
 
 	return (
 		<P5InstanceContext.Provider value={p5Instance}>
-		  <div style={{ position: "relative", width: "100%", height: CANVAS_HEIGHT }}>
-			{showSlider && (
-			  <div style={{ position: "absolute", top: "80px", right: "10px", zIndex: "1", backgroundColor: "#fafafa", width: "200px", padding: "10px" }}>
-				
-				<div style={{ marginBottom: "10px" }}>SquishMedian</div>
-				<div style={{ position: "relative" }}>
-				  <div style={{ position: "absolute", top: 0, left: 0, height: "100%", width: "10px", backgroundColor: "white" }}></div>
-				  <input type="range" min="0" max="1" step="0.01" value={sliderValue} onChange={handleSliderChange} style={{ width: "100%" }} />
-				</div>
+		 <div style={{ position: "relative", width: "100%", height: CANVAS_HEIGHT }}>
+		 <div
+  		className="input-container"style={{position: "absolute", top: "10px",right: "20px", zIndex: showSlider ? 2 : 1,}}>
+        <button className={showSlider ? "close-button" : "download-button"} onClick={() => setShowSlider(!showSlider)}>
+          {showSlider ? "X" : "Toggle Inputs"}
+        </button>
+      </div>
+			
+		  {showSlider && (
+  <div style={{ position: "absolute", top: "0px", right: "10px", zIndex: "1", backgroundColor: "#fafafa", width: "200px", padding: "10px" }}>
+    <div style={{ marginBottom: "10px" }}>squishXMedian</div>
+    <div style={{ position: "relative" }}>
+      <div style={{ position: "absolute", top: 0, left: 0, height: "100%", width: "10px", backgroundColor: "white" }}></div>
+      <input type="range" min="0" max="1" step="0.1" value={squishXMedian} onChange={handleSliderSquishXMedianChange} style={{ width: "100%" }} />
+    </div>
 
-				<div style={{ marginBottom: "10px" }}>Input 2</div>
-				<div style={{ position: "relative" }}>
-  				<div style={{ position: "absolute", top: 0, left: 0, height: "100%", width: "10px", backgroundColor: "white" }}></div>
-				  <input
-  type="range"
-  min="0"
-  max="1"
-  step="0.01"
-  value={squishXVarianceValue}
-  onChange={(event) => setSquishXVarianceValue(parseFloat(event.target.value))}
-  style={{ width: "100%" }}
-/>				</div>
+    <div style={{ marginBottom: "10px", marginTop: "10px" }}>squishXVariance</div>
+    <div style={{ position: "relative" }}>
+      <div style={{ position: "absolute", top: 0, left: 0, height: "100%", width: "10px", backgroundColor: "white" }}></div>
+      <input type="range" min="0" max="1" step="0.1" value={squishXVariance} onChange={handleSliderSquishXVarianceChange} style={{ width: "100%" }} />
+    </div>
+
+	<div style={{ marginBottom: "10px", marginTop: "10px" }}>squishYMedian</div>
+    <div style={{ position: "relative" }}>
+      <div style={{ position: "absolute", top: 0, left: 0, height: "100%", width: "10px", backgroundColor: "white" }}></div>
+      <input type="range" min="0" max="1" step="0.1" value={squishYMedian} onChange={handleSliderSquishYMedianChange} style={{ width: "100%" }} />
+    </div>
 
 
-			  </div>
-			)}
+	<div style={{ marginBottom: "10px", marginTop: "10px" }}>squishYVariance</div>
+    <div style={{ position: "relative" }}>
+      <div style={{ position: "absolute", top: 0, left: 0, height: "100%", width: "10px", backgroundColor: "white" }}></div>
+      <input type="range" min="0" max="1" step="0.1" value={squishYVariance} onChange={handleSliderSquishYVarianceChange} style={{ width: "100%" }} />
+    </div>
+
+	<div style={{ marginBottom: "10px", marginTop: "10px" }}>rotationMedian</div>
+    <div style={{ position: "relative" }}>
+      <div style={{ position: "absolute", top: 0, left: 0, height: "100%", width: "10px", backgroundColor: "white" }}></div>
+      <input type="range" min="0" max="360" step="1" value={rotationMedian} onChange={handleSliderRotationMedianChange} style={{ width: "100%" }} />
+    </div>
+
+	<div style={{ marginBottom: "10px", marginTop: "10px" }}>rotationVariance</div>
+    <div style={{ position: "relative" }}>
+      <div style={{ position: "absolute", top: 0, left: 0, height: "100%", width: "10px", backgroundColor: "white" }}></div>
+      <input type="range" min="0" max="360" step="1" value={rotationVariance} onChange={handleSliderRotationVarianceChange} style={{ width: "100%" }} />
+    </div>
+
+	<div style={{ marginBottom: "10px", marginTop: "10px" }}>lineOffsetVariance</div>
+    <div style={{ position: "relative" }}>
+      <div style={{ position: "absolute", top: 0, left: 0, height: "100%", width: "10px", backgroundColor: "white" }}></div>
+      <input type="range" min="0" max="1" step="0.1" value={lineOffsetVariance} onChange={handleLineOffsetVarianceChange} style={{ width: "100%" }} />
+    </div>
+
+	<div style={{ marginBottom: "10px", marginTop: "10px" }}>wordLengthMedian</div>
+    <div style={{ position: "relative" }}>
+      <div style={{ position: "absolute", top: 0, left: 0, height: "100%", width: "10px", backgroundColor: "white" }}></div>
+      <input type="range" min="0" max={horizontalSegments} step="1" value={wordLengthMedian} onChange={handleWordLengthMedianChange} style={{ width: "100%" }} />
+    </div>
+
+	<div style={{ marginBottom: "10px", marginTop: "10px" }}>wordLengthVariance</div>
+    <div style={{ position: "relative" }}>
+      <div style={{ position: "absolute", top: 0, left: 0, height: "100%", width: "10px", backgroundColor: "white" }}></div>
+      <input type="range" min="0" max={wordLengthMedian} step="1" value={wordLengthVariance} onChange={handleWordLengthVarianceChange} style={{ width: "100%" }} />
+    </div>
+
+	<div style={{ marginBottom: "10px", marginTop: "10px" }}>horizontalSegments</div>
+    <div style={{ position: "relative" }}>
+      <div style={{ position: "absolute", top: 0, left: 0, height: "100%", width: "10px", backgroundColor: "white" }}></div>
+      <input type="range" min="1" max="100" step="1" value={horizontalSegments} onChange={handleHorizontalSegmentChange} style={{ width: "100%" }} />
+    </div>
+
+	<div style={{ marginBottom: "10px", marginTop: "10px" }}>verticalSegments</div>
+    <div style={{ position: "relative" }}>
+      <div style={{ position: "absolute", top: 0, left: 0, height: "100%", width: "10px", backgroundColor: "white" }}></div>
+      <input type="range" min="1" max="100" step="1" value={verticalSegments} onChange={handleVerticalSegmentChange} style={{ width: "100%" }} />
+    </div>
+
+  </div>
+)}
 			<Sketch setup={setup} draw={draw} />
-			<div className="input-container" style={{ position: "absolute", top: "10px", right: "10px", zIndex: "1" }}>
-			  <button className="download-button" onClick={() => setShowSlider(!showSlider)}>Toggle Inputs</button>
-			</div>
 		  </div>
 		</P5InstanceContext.Provider>
 	  );  
