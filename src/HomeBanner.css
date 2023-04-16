@@ -28,13 +28,16 @@
     line-height: 1.2;
     margin-top: 0;
     word-wrap: break-word;
-    padding: 10px;
+    padding: 10px 30px 10px 30px;
     border-radius: 30px;
     background-color: rgb(250, 250, 250, 0.9);
     display: inline-block;
     transition: width 0.5s ease-out;
     z-index: 999;
+    box-shadow: 0 0 20px 5px rgba(243, 144, 13, 0.7);
+    outline: 2px solid rgba(255, 166, 0, 0.7);
   }
+  
   
   .banner-text h3.cd-headline .typed-text {
     background-color: #000;
