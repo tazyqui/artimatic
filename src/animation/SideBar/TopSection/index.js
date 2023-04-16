@@ -30,7 +30,7 @@ const TopSection = () => {
             <i className="fa-sharp fa-solid fa-circle-info fa-bounce fa-lg" style={{ marginLeft: '10px', color:'#00308F' }}></i>
           </div>
         )}
-        {location.pathname === '/' && (
+        {(location.pathname === '/sketch' || location.pathname === '/') && (
           <a href='/sketch' className="align-right">
             <div className='Sketch_button download-button'>Visit Sketch</div>
           </a>
