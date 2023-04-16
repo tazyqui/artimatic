@@ -14,8 +14,8 @@ import P5InstanceContext from '../P5InstanceContext';
 		const [squishXVariance, setSquishXVariance] = useState(0.1);
 		const [squishYMedian, setSquishYMedian] = useState(0.5);
 		const [squishYVariance, setSquishYVariance] = useState(0.9);
-		const [rotationMedian, setrotationMedian] = useState(180);
-		const [rotationVariance, setrotationVariance] = useState(180);
+		const [rotationMedian, setrotationMedian] = useState(360);
+		const [rotationVariance, setrotationVariance] = useState(360);
 		const [lineOffsetVariance, setLineOffsetVariance] = useState(0.7);
 		const [wordLengthMedian, setWordLengthMedian] = useState(9);
 		const [wordLengthVariance, setWordLengthVariance] = useState(2);
@@ -56,58 +56,69 @@ import P5InstanceContext from '../P5InstanceContext';
 
 	// functions to handle slider changes for inputs 
 	const handleSliderSquishXMedianChange = (event) => {
+		const newValue = Number(event.target.value);
 		console.log("SquishXMedian Slider value changed:", event.target.value);
-		setSquishXMedian(event.target.value);
+		setSquishXMedian(newValue);
 	  };
 
 	const handleSliderSquishXVarianceChange = (event) => {
+		const newValue = Number(event.target.value);
 		console.log("SquishXVariance Slider variance value changed:", event.target.value);
-		setSquishXVariance(event.target.value);
+		setSquishXVariance(newValue);
 	  };
 
 	  const handleSliderSquishYMedianChange = (event) => {
+		const newValue = Number(event.target.value);
 		console.log("SquishYMedian Slider value changed:", event.target.value);
-		setSquishYMedian(event.target.value);
+		setSquishYMedian(newValue);
 	  };
 
 	const handleSliderSquishYVarianceChange = (event) => {
+		const newValue = Number(event.target.value);
 		console.log("SquishYVariance Slider variance value changed:", event.target.value);
-		setSquishYVariance(event.target.value);
+		setSquishYVariance(newValue);
 	  };
 
 	  const handleSliderRotationMedianChange = (event) => {
-		console.log("SquishYVariance Slider variance value changed:", event.target.value);
-		setrotationMedian(event.target.value);
+		const newValue = Number(event.target.value);
+		console.log("setrotationMedian Slider variance value changed:", event.target.value);
+		setrotationMedian(newValue);
 	  };
 
 	  const handleSliderRotationVarianceChange = (event) => {
-		console.log("SquishYVariance Slider variance value changed:", event.target.value);
-		setrotationVariance(event.target.value);
+		const newValue = Number(event.target.value);
+		console.log("setrotationVariance Slider variance value changed:", event.target.value);
+		setrotationVariance(newValue );
 	  };
 
 	  const handleLineOffsetVarianceChange = (event) => {
-		console.log("SquishYVariance Slider variance value changed:", event.target.value);
-		setLineOffsetVariance(event.target.value);
+		const newValue = Number(event.target.value);
+		console.log("setLineOffsetVariance Slider variance value changed:", event.target.value);
+		setLineOffsetVariance(newValue);
 	  };
 
 	  const handleWordLengthMedianChange = (event) => {
-		console.log("SquishYVariance Slider variance value changed:", event.target.value);
-		setWordLengthMedian(event.target.value);
+		const newValue = Number(event.target.value);
+		console.log("setWordLengthMedian Slider variance value changed:", event.target.value);
+		setWordLengthMedian(newValue);
 	  };
 
 	  const handleWordLengthVarianceChange = (event) => {
-		console.log("SquishYVariance Slider variance value changed:", event.target.value);
-		setWordLengthVariance(event.target.value);
+		const newValue = Number(event.target.value);
+		console.log("setWordLengthVariance Slider variance value changed:", event.target.value);
+		setWordLengthVariance(newValue);
 	  };
 
 	  const handleHorizontalSegmentChange = (event) => {
-		console.log("SquishYVariance Slider variance value changed:", event.target.value);
-		setHorizontalSegments(event.target.value);
+		const newValue = Number(event.target.value);
+		console.log("setHorizontalSegments Slider variance value changed:", event.target.value);
+		setHorizontalSegments(newValue);
 	  };
 
 	  const handleVerticalSegmentChange = (event) => {
-		console.log("SquishYVariance Slider variance value changed:", event.target.value);
-		setVerticalSegments(event.target.value);
+		const newValue = Number(event.target.value);
+		console.log("setVerticalSegments Slider variance value changed:", event.target.value);
+		setVerticalSegments(newValue);
 	  };
 
 
